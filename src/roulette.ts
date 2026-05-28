@@ -43,6 +43,7 @@ export class Roulette extends EventTarget {
   private _goalDist: number = Infinity;
   private _isRunning: boolean = false;
   private _winner: Marble | null = null;
+  private _winnerPosition: { x: number; y: number } | null = null;
 
   private _uiObjects: UIObject[] = [];
 
@@ -141,10 +142,14 @@ export class Roulette extends EventTarget {
     }
 
     if (this._stage) {
+      if (!this._isRunning && this._winnerPosition) {
+        this._camera.setPosition(this._winnerPosition);
+        this._camera.zoom = 3;
+      }
       this._camera.update({
-        marbles: this._marbles,
+        marbles: !this._isRunning && this._winnerPosition ? [] : this._marbles,
         stage: this._stage,
-        needToZoom: this._goalDist < zoomThreshold,
+        needToZoom: this._isRunning && this._goalDist < zoomThreshold,
         targetIndex: this._winners.length > 0 ? this._winnerRank - this._winners.length : 0,
       });
     }
@@ -168,6 +173,7 @@ export class Roulette extends EventTarget {
         if (this._isRunning && this._winners.length === this._winnerRank + 1) {
           this.dispatchEvent(new CustomEvent('goal', { detail: { winner: marble.name } }));
           this._winner = marble;
+          this._winnerPosition = { x: marble.x, y: marble.y };
           this._isRunning = false;
           this._particleManager.shot(this._renderer.width, this._renderer.height);
           setTimeout(() => {
@@ -185,6 +191,7 @@ export class Roulette extends EventTarget {
             })
           );
           this._winner = this._marbles[i + 1];
+          this._winnerPosition = { x: this._marbles[i + 1].x, y: this._marbles[i + 1].y };
           this._isRunning = false;
           this._particleManager.shot(this._renderer.width, this._renderer.height);
           setTimeout(() => {
@@ -445,6 +452,7 @@ export class Roulette extends EventTarget {
 
   public reset() {
     this._isPaused = false;
+    this._winnerPosition = null;
     this.clearMarbles();
     this._clearMap();
     this._loadMap();

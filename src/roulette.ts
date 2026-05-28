@@ -199,9 +199,11 @@ export class Roulette extends EventTarget {
             this._recorder.stop();
           }, 1000);
         }
-        setTimeout(() => {
-          this.physics.removeMarble(marble.id);
-        }, 500);
+        if (!this._winner || marble.id !== this._winner.id) {
+          setTimeout(() => {
+            this.physics.removeMarble(marble.id);
+          }, 500);
+        }
       }
     }
 

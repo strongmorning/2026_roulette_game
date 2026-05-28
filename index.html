@@ -704,27 +704,6 @@
     // };
     // setTimeout(checkDonateButtonLoaded, 100);
 
-    const currentNotice = 6;
-    const noticeKey = 'lastViewedNotification';
-
-    const closeNotice = () => {
-      document.querySelector('#notice').style.display = 'none';
-      localStorage.setItem(noticeKey, currentNotice.toString());
-    };
-
-    const openNotice = () => {
-      console.log('openNotice');
-      document.querySelector('#notice').style.display = 'flex';
-    };
-
-    document.querySelector('#closeNotice').addEventListener('click', () => {
-      closeNotice();
-    });
-
-    document.querySelector('#btnNotice').addEventListener('click', () => {
-      openNotice();
-    });
-
     function simpleToast(msg) {
       const toast = document.createElement('div');
       toast.classList.add('toast');
@@ -741,15 +720,6 @@
       }, 1200);
     }
 
-    const checkNotice = () => {
-      const lastViewed = localStorage.getItem(noticeKey);
-      console.log('lastViewed', lastViewed);
-      if (lastViewed === null || Number(lastViewed) < currentNotice) {
-        openNotice();
-      }
-    };
-
-    checkNotice();
   }
 </script>
 <div id="settings" class="settings">
@@ -851,12 +821,6 @@
     </div>
 
     <div class="actions">
-      <button id="btnNotice">
-        <i class="icon megaphone"></i>
-      </button>
-      <a href='https://marblerouletteshop.com' target='_blank' id="btnShop" class='btn new' title='MarbleRoulette Shop'>
-        <img src='assets/images/marblerouletteshop.png' />
-      </a>
       <div class="sep"></div>
       <button id="btnShuffle">
         <i class="icon shuffle"></i>
@@ -869,24 +833,6 @@
     </div>
   </div>
 </div>
-<div id="notice">
-  <h1>Notice</h1>
-  <div class="notice-body">
-    <h2>50% 할인 행사</h2>
-    <a href='https://marblerouletteshop.com/news/1'>
-      <img style='width:100%;' src='/assets/sale.jpg' />
-    </a>
-    <p>
-      저작권 등록을 기념하여 전 상품 50% 할인 행사를 진행합니다.<br />
-      감사합니다!
-    </p>
-  </div>
-  <div class="notice-action">
-    <button id="closeNotice" data-trans>Close</button>
-  </div>
-</div>
 <button id="btnNextGame">다음 게임</button>
-<div class="copyright">&copy; 2022-2026.<a href="https://lazygyu.net" target="_blank">lazygyu</a> <span data-trans>This program is freeware and may be used freely anywhere, including in broadcasts and videos.</span>
-</div>
 </body>
 </html>

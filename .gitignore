@@ -11,3 +11,6 @@ src/preview.ts
 custom.html
 preview.html
 scripts/build-custom.sh
+db/
+.db/
+package-lock.json

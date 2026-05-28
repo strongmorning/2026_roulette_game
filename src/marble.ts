@@ -155,13 +155,19 @@ export class Marble {
 
     // ctx.shadowColor = this.color;
     // ctx.shadowBlur = zoom / 2;
-    if (skin) {
+    if (skin instanceof HTMLCanvasElement) {
+      // 커스텀 사진: 미리 원형 크롭된 캔버스 → 마블 바디 위에 덮어 그리기
+      this._drawMarbleBody(ctx, false);
       transformGuard(ctx, () => {
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle);
-        ctx.beginPath();
-        ctx.arc(0, 0, hs, 0, Math.PI * 2);
-        ctx.clip();
+        ctx.drawImage(skin, -hs, -hs, hs * 2, hs * 2);
+      });
+    } else if (skin) {
+      // API 스프라이트 / 하드코딩 이미지: 원래 방식 유지
+      transformGuard(ctx, () => {
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
         ctx.drawImage(skin, -hs, -hs, hs * 2, hs * 2);
       });
     } else {

@@ -33,14 +33,27 @@ export class RouletteRenderer {
   protected _theme: ColorTheme = Themes.dark;
   protected _keywordService: KeywordService;
   private _backgroundImage: HTMLImageElement | null = null;
-  private _customMarbleImages: Map<string, HTMLImageElement> = new Map();
+  private _customMarbleImages: Map<string, HTMLCanvasElement> = new Map();
 
   setBackgroundImage(img: HTMLImageElement | null): void {
     this._backgroundImage = img;
   }
 
   setCustomMarbleImage(name: string, img: HTMLImageElement): void {
-    this._customMarbleImages.set(name, img);
+    if (!img.naturalWidth || !img.naturalHeight) return;
+    const size = 256;
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d')!;
+    const side = Math.min(img.naturalWidth, img.naturalHeight);
+    const sx = (img.naturalWidth - side) / 2;
+    const sy = (img.naturalHeight - side) / 2;
+    ctx.beginPath();
+    ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
+    this._customMarbleImages.set(name, canvas);
   }
 
   clearCustomMarbleImages(): void {

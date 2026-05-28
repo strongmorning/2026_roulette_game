@@ -274,15 +274,22 @@
         if (!file) return;
         const reader = new FileReader();
         reader.onload = async (ev) => {
+          let rawImg;
+          try { rawImg = await loadImageFromBase64(ev.target.result); } catch (e) { return; }
+
+          // 렌더러에 이미지 적용 (압축 성공 여부와 무관하게 항상 실행)
+          window.roulette.setCustomMarbleImage(name, rawImg);
+          btn.textContent = '사진 변경';
+
+          // 압축 후 localStorage 저장 및 미리보기 (실패해도 렌더링엔 영향 없음)
           try {
-            const rawImg = await loadImageFromBase64(ev.target.result);
             const compressed = compressCropSquare(rawImg, 200, 0.85);
             try { localStorage.setItem('mbr_photo_' + encodeURIComponent(name), compressed); } catch (e) {}
             preview.src = compressed;
-            preview.style.display = 'block';
-            btn.textContent = '사진 변경';
-            window.roulette.setCustomMarbleImage(name, rawImg);
-          } catch (e) {}
+          } catch (e) {
+            preview.src = ev.target.result;
+          }
+          preview.style.display = 'block';
         };
         reader.readAsDataURL(file);
       });
@@ -463,14 +470,20 @@
       if (!file) return;
       const reader = new FileReader();
       reader.onload = async (ev) => {
+        let rawImg;
+        try { rawImg = await loadImageFromBase64(ev.target.result); } catch (e) { return; }
+
+        // 렌더러에 이미지 적용 (압축 성공 여부와 무관하게 항상 실행)
+        window.roulette.setBackgroundImage(rawImg);
+
         try {
-          const rawImg = await loadImageFromBase64(ev.target.result);
           const compressed = compressImage(rawImg, 1920, 1080, 0.85);
           try { localStorage.setItem('mbr_bgImage', compressed); } catch (e) {}
           document.querySelector('#bgImagePreview').src = compressed;
-          document.querySelector('#bgImagePreview').style.display = 'block';
-          window.roulette.setBackgroundImage(rawImg);
-        } catch (e) {}
+        } catch (e) {
+          document.querySelector('#bgImagePreview').src = ev.target.result;
+        }
+        document.querySelector('#bgImagePreview').style.display = 'block';
       };
       reader.readAsDataURL(file);
     });

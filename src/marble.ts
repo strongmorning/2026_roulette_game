@@ -159,6 +159,9 @@ export class Marble {
       transformGuard(ctx, () => {
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle);
+        ctx.beginPath();
+        ctx.arc(0, 0, hs, 0, Math.PI * 2);
+        ctx.clip();
         ctx.drawImage(skin, -hs, -hs, hs * 2, hs * 2);
       });
     } else {

@@ -82,6 +82,107 @@
         setWinnerRank(total);
         break;
     }
+    updatePhotoUploadUI();
+  }
+
+  function loadImageFromBase64(base64) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.src = base64;
+    });
+  }
+
+  async function applyStoredImages() {
+    const bgData = localStorage.getItem('mbr_bgImage');
+    if (bgData) {
+      const img = await loadImageFromBase64(bgData);
+      window.roulette.setBackgroundImage(img);
+      const preview = document.querySelector('#bgImagePreview');
+      preview.src = bgData;
+      preview.style.display = 'block';
+    }
+
+    window.roulette.clearCustomMarbleImages();
+    const keys = Object.keys(localStorage);
+    for (const key of keys) {
+      if (key.startsWith('mbr_photo_')) {
+        const name = decodeURIComponent(key.slice('mbr_photo_'.length));
+        const data = localStorage.getItem(key);
+        const img = await loadImageFromBase64(data);
+        window.roulette.setCustomMarbleImage(name, img);
+      }
+    }
+  }
+
+  function getUniqueNames() {
+    const names = getNames();
+    const seen = new Set();
+    const result = [];
+    names.forEach(n => {
+      const { name } = parseName(n);
+      if (name && !seen.has(name)) {
+        seen.add(name);
+        result.push(name);
+      }
+    });
+    return result;
+  }
+
+  function updatePhotoUploadUI() {
+    const container = document.querySelector('#photoUploadList');
+    if (!container) return;
+    const uniqueNames = getUniqueNames();
+    container.innerHTML = '';
+    uniqueNames.forEach(name => {
+      const row = document.createElement('div');
+      row.className = 'photo-upload-row';
+
+      const label = document.createElement('span');
+      label.className = 'photo-name-label';
+      label.textContent = name;
+
+      const preview = document.createElement('img');
+      preview.className = 'photo-preview';
+      const stored = localStorage.getItem('mbr_photo_' + encodeURIComponent(name));
+      if (stored) {
+        preview.src = stored;
+        preview.style.display = 'block';
+      }
+
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.style.display = 'none';
+      input.id = 'photo_' + name;
+
+      const btn = document.createElement('button');
+      btn.className = 'btn-photo-upload';
+      btn.textContent = stored ? '사진 변경' : '사진 추가';
+      btn.addEventListener('click', () => input.click());
+
+      input.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async (ev) => {
+          const base64 = ev.target.result;
+          localStorage.setItem('mbr_photo_' + encodeURIComponent(name), base64);
+          preview.src = base64;
+          preview.style.display = 'block';
+          btn.textContent = '사진 변경';
+          const img = await loadImageFromBase64(base64);
+          window.roulette.setCustomMarbleImage(name, img);
+        };
+        reader.readAsDataURL(file);
+      });
+
+      row.appendChild(preview);
+      row.appendChild(label);
+      row.appendChild(btn);
+      row.appendChild(input);
+      container.appendChild(row);
+    });
   }
 
   function setWinnerRank(rank) {
@@ -247,6 +348,31 @@
 
     document.querySelector('#btnShuffle').click();
 
+    document.querySelector('#bgImageInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async (ev) => {
+        const base64 = ev.target.result;
+        localStorage.setItem('mbr_bgImage', base64);
+        const preview = document.querySelector('#bgImagePreview');
+        preview.src = base64;
+        preview.style.display = 'block';
+        const img = await loadImageFromBase64(base64);
+        window.roulette.setBackgroundImage(img);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.querySelector('#btnClearBg').addEventListener('click', () => {
+      localStorage.removeItem('mbr_bgImage');
+      document.querySelector('#bgImagePreview').style.display = 'none';
+      document.querySelector('#bgImageInput').value = '';
+      window.roulette.setBackgroundImage(null);
+    });
+
+    applyStoredImages();
+
     const maps = window.roulette.getMaps();
     const mapSelector = document.querySelector('#sltMap');
     maps.forEach((map) => {
@@ -375,6 +501,23 @@
   <div class="left">
     <h3 data-trans>Enter names below</h3>
     <textarea id="in_names" placeholder="Input names separated by commas or line feed here" data-trans="placeholder">수박*2,키위*2,귤*2</textarea>
+
+    <div class="custom-images-section">
+      <div class="custom-images-row">
+        <label class="custom-images-label">배경 이미지</label>
+        <div class="bg-image-controls">
+          <input type="file" id="bgImageInput" accept="image/*" style="display:none" />
+          <button class="btn-photo-upload" onclick="document.getElementById('bgImageInput').click()">이미지 선택</button>
+          <button id="btnClearBg" class="btn-photo-clear">삭제</button>
+          <img id="bgImagePreview" class="bg-preview" style="display:none" />
+        </div>
+      </div>
+      <div class="custom-images-row">
+        <label class="custom-images-label">참가자 사진</label>
+        <div id="photoUploadList" class="photo-upload-list"></div>
+      </div>
+    </div>
+
     <div class="actions">
       <button id="btnNotice">
         <i class="icon megaphone"></i>

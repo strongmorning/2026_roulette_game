@@ -82,6 +82,18 @@ export class Roulette extends EventTarget {
     return initialZoom * this._camera.zoom;
   }
 
+  public setBackgroundImage(img: HTMLImageElement | null): void {
+    this._renderer.setBackgroundImage(img);
+  }
+
+  public setCustomMarbleImage(name: string, img: HTMLImageElement): void {
+    this._renderer.setCustomMarbleImage(name, img);
+  }
+
+  public clearCustomMarbleImages(): void {
+    this._renderer.clearCustomMarbleImages();
+  }
+
   private addUiObject(obj: UIObject) {
     this._uiObjects.push(obj);
     if (obj.onWheel) {

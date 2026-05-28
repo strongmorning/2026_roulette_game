@@ -32,6 +32,20 @@ export class RouletteRenderer {
   protected _images: { [key: string]: HTMLImageElement } = {};
   protected _theme: ColorTheme = Themes.dark;
   protected _keywordService: KeywordService;
+  private _backgroundImage: HTMLImageElement | null = null;
+  private _customMarbleImages: Map<string, HTMLImageElement> = new Map();
+
+  setBackgroundImage(img: HTMLImageElement | null): void {
+    this._backgroundImage = img;
+  }
+
+  setCustomMarbleImage(name: string, img: HTMLImageElement): void {
+    this._customMarbleImages.set(name, img);
+  }
+
+  clearCustomMarbleImages(): void {
+    this._customMarbleImages.clear();
+  }
 
   constructor() {
     this._keywordService = this.createKeywordService();
@@ -119,6 +133,9 @@ export class RouletteRenderer {
   }
 
   private getMarbleImage(name: string): CanvasImageSource | undefined {
+    // Priority 0: User-uploaded custom photo
+    const custom = this._customMarbleImages.get(name);
+    if (custom) return custom;
     // Priority 1: Hardcoded images
     if (this._images[name]) {
       return this._images[name];
@@ -134,6 +151,10 @@ export class RouletteRenderer {
     this._theme = renderParameters.theme;
     this.ctx.fillStyle = this._theme.background;
     this.ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
+
+    if (this._backgroundImage) {
+      this.ctx.drawImage(this._backgroundImage, 0, 0, this._canvas.width, this._canvas.height);
+    }
 
     this.ctx.save();
     this.ctx.scale(initialZoom, initialZoom);

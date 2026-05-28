@@ -2979,4 +2979,91 @@ export const stages: StageDef[] = [
       },
     ],
   },
+  {
+    title: 'Battery Cell',
+    goalY: 108,
+    zoomY: 103,
+    entities: [
+      // === WALLS (battery casing) ===
+      // Left wall: anode current collector (copper)
+      {
+        type: 'static',
+        position: { x: 0, y: 0 },
+        props: { density: 1, angularVelocity: 0, restitution: 0.2 },
+        shape: { type: 'polyline', rotation: 0, points: [[7, -300], [7, 108]], color: '#b87333' },
+      },
+      // Right wall: cathode current collector (aluminum)
+      {
+        type: 'static',
+        position: { x: 0, y: 0 },
+        props: { density: 1, angularVelocity: 0, restitution: 0.2 },
+        shape: { type: 'polyline', rotation: 0, points: [[25, -300], [25, 108]], color: '#a8a9ad' },
+      },
+
+      // === CATHODE 양극 (y: 5~30) — LiCoO₂ rotating electrode particles ===
+      { position: { x: 12, y: 10 }, type: 'kinematic', shape: { type: 'box', width: 3.5, height: 0.15, rotation: 0, color: '#1e90ff' }, props: { density: 1, angularVelocity: 2, restitution: 0.3 } },
+      { position: { x: 20, y: 14 }, type: 'kinematic', shape: { type: 'box', width: 3, height: 0.15, rotation: 0, color: '#1e90ff' }, props: { density: 1, angularVelocity: -2.5, restitution: 0.3 } },
+      { position: { x: 12, y: 18 }, type: 'kinematic', shape: { type: 'box', width: 4, height: 0.15, rotation: 0, color: '#1e90ff' }, props: { density: 1, angularVelocity: 1.8, restitution: 0.3 } },
+      { position: { x: 19.5, y: 22 }, type: 'kinematic', shape: { type: 'box', width: 3.5, height: 0.15, rotation: 0, color: '#1e90ff' }, props: { density: 1, angularVelocity: -2, restitution: 0.3 } },
+      { position: { x: 11, y: 27 }, type: 'kinematic', shape: { type: 'box', width: 4, height: 0.15, rotation: 0, color: '#1e90ff' }, props: { density: 1, angularVelocity: 2.2, restitution: 0.3 } },
+
+      // === SEPARATOR 분리막 (y: 32~53) — porous membrane with staggered gaps ===
+      // Row 1 (y=32): gaps at x=13~15, x=21~23
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[7.5, 32], [13, 32]], color: '#dcdcdc' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[15, 32], [21, 32]], color: '#dcdcdc' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[23, 32], [24.5, 32]], color: '#dcdcdc' } },
+      // Row 2 (y=37): gaps at x=9~11, x=17.5~19.5
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[7.5, 37], [9, 37]], color: '#dcdcdc' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[11, 37], [17.5, 37]], color: '#dcdcdc' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[19.5, 37], [24.5, 37]], color: '#dcdcdc' } },
+      // Row 3 (y=42): gaps at x=12~14, x=20~22
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[7.5, 42], [12, 42]], color: '#dcdcdc' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[14, 42], [20, 42]], color: '#dcdcdc' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[22, 42], [24.5, 42]], color: '#dcdcdc' } },
+      // Row 4 (y=47): gaps at x=9~11.5, x=16~18
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[7.5, 47], [9, 47]], color: '#dcdcdc' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[11.5, 47], [16, 47]], color: '#dcdcdc' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[18, 47], [24.5, 47]], color: '#dcdcdc' } },
+      // Row 5 (y=52): gaps at x=13~15, x=20~22.5
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[7.5, 52], [13, 52]], color: '#dcdcdc' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[15, 52], [20, 52]], color: '#dcdcdc' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[22.5, 52], [24.5, 52]], color: '#dcdcdc' } },
+
+      // === Li⁺ ION PADDLES 리튬이온 (y: 56~68) — fast rotating, orange with bloom ===
+      { position: { x: 10, y: 58 }, type: 'kinematic', shape: { type: 'box', width: 1.8, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff4400' }, props: { density: 1, angularVelocity: 9, restitution: 0.5 } },
+      { position: { x: 16, y: 58 }, type: 'kinematic', shape: { type: 'box', width: 1.8, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff4400' }, props: { density: 1, angularVelocity: -9, restitution: 0.5 } },
+      { position: { x: 22, y: 58 }, type: 'kinematic', shape: { type: 'box', width: 1.8, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff4400' }, props: { density: 1, angularVelocity: 9, restitution: 0.5 } },
+      { position: { x: 13, y: 64 }, type: 'kinematic', shape: { type: 'box', width: 2.2, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff4400' }, props: { density: 1, angularVelocity: -8, restitution: 0.5 } },
+      { position: { x: 20, y: 64 }, type: 'kinematic', shape: { type: 'box', width: 2, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff4400' }, props: { density: 1, angularVelocity: 8, restitution: 0.5 } },
+
+      // === SEI LAYER SEI막 (y: 70~76) — irregular bouncy film on anode surface ===
+      { type: 'static', position: { x: 8.5, y: 73 }, props: { density: 1, angularVelocity: 0, restitution: 1.0, life: 1 }, shape: { type: 'circle', radius: 0.55, color: '#32cd32' } },
+      { type: 'static', position: { x: 10.5, y: 72.5 }, props: { density: 1, angularVelocity: 0, restitution: 1.0, life: 1 }, shape: { type: 'circle', radius: 0.5, color: '#32cd32' } },
+      { type: 'static', position: { x: 12.5, y: 73.5 }, props: { density: 1, angularVelocity: 0, restitution: 1.0, life: 1 }, shape: { type: 'circle', radius: 0.6, color: '#32cd32' } },
+      { type: 'static', position: { x: 14.5, y: 72 }, props: { density: 1, angularVelocity: 0, restitution: 1.0, life: 1 }, shape: { type: 'circle', radius: 0.5, color: '#32cd32' } },
+      { type: 'static', position: { x: 16.5, y: 73 }, props: { density: 1, angularVelocity: 0, restitution: 1.0, life: 1 }, shape: { type: 'circle', radius: 0.55, color: '#32cd32' } },
+      { type: 'static', position: { x: 18.5, y: 72.5 }, props: { density: 1, angularVelocity: 0, restitution: 1.0, life: 1 }, shape: { type: 'circle', radius: 0.5, color: '#32cd32' } },
+      { type: 'static', position: { x: 20.5, y: 73.5 }, props: { density: 1, angularVelocity: 0, restitution: 1.0, life: 1 }, shape: { type: 'circle', radius: 0.6, color: '#32cd32' } },
+      { type: 'static', position: { x: 22.5, y: 72 }, props: { density: 1, angularVelocity: 0, restitution: 1.0, life: 1 }, shape: { type: 'circle', radius: 0.5, color: '#32cd32' } },
+      { type: 'static', position: { x: 24, y: 73.5 }, props: { density: 1, angularVelocity: 0, restitution: 1.0, life: 1 }, shape: { type: 'circle', radius: 0.4, color: '#32cd32' } },
+
+      // === Li PLATING 수상돌기 (y: 76~84) — dendrite spikes (V-shaped) ===
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.4 }, shape: { type: 'polyline', rotation: 0, points: [[8.5, 82], [9.5, 77], [10.5, 82]], color: '#c0c0c0' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.4 }, shape: { type: 'polyline', rotation: 0, points: [[12, 83], [13, 77.5], [14.5, 82.5]], color: '#c0c0c0' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.4 }, shape: { type: 'polyline', rotation: 0, points: [[16, 82], [17, 77], [18.5, 83]], color: '#c0c0c0' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.4 }, shape: { type: 'polyline', rotation: 0, points: [[20, 83], [21, 77.5], [22.5, 82]], color: '#c0c0c0' } },
+
+      // === ANODE 음극 (y: 84~100) — graphite intercalation layers (angled ledges) ===
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.2 }, shape: { type: 'polyline', rotation: 0, points: [[7.5, 87], [14.5, 85]], color: '#404040' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.2 }, shape: { type: 'polyline', rotation: 0, points: [[17.5, 86], [24.5, 88]], color: '#404040' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.2 }, shape: { type: 'polyline', rotation: 0, points: [[7.5, 91], [13, 89.5]], color: '#404040' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.2 }, shape: { type: 'polyline', rotation: 0, points: [[15, 90.5], [22, 88.5]], color: '#404040' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.2 }, shape: { type: 'polyline', rotation: 0, points: [[7.5, 96], [15.5, 94]], color: '#404040' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.2 }, shape: { type: 'polyline', rotation: 0, points: [[18, 95.5], [24.5, 93.5]], color: '#404040' } },
+
+      // === BOTTOM FUNNEL (current collector exit) ===
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0 }, shape: { type: 'polyline', rotation: 0, points: [[7, 100], [13.5, 104], [13.5, 109]], color: '#b87333' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0 }, shape: { type: 'polyline', rotation: 0, points: [[25, 100], [18.5, 104], [18.5, 109]], color: '#a8a9ad' } },
+    ],
+  },
 ];

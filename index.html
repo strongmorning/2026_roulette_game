@@ -535,6 +535,7 @@
     document.querySelector('#btnNextGame').addEventListener('click', () => {
       document.querySelector('#btnNextGame').style.display = 'none';
       document.querySelector('#settings').classList.remove('hide');
+      getReady();
     });
 
     window.roulette.addEventListener('message', (e) => {

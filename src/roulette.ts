@@ -199,11 +199,6 @@ export class Roulette extends EventTarget {
             this._recorder.stop();
           }, 1000);
         }
-        if (!this._winner || marble.id !== this._winner.id) {
-          setTimeout(() => {
-            this.physics.removeMarble(marble.id);
-          }, 500);
-        }
       }
     }
 
@@ -212,7 +207,9 @@ export class Roulette extends EventTarget {
     this._goalDist = Math.abs(this._stage.zoomY - topY);
     this._timeScale = this._calcTimeScale();
 
-    this._marbles = this._marbles.filter((marble) => marble.y <= this._stage?.goalY);
+    this._marbles = this._marbles.filter(
+      (marble) => marble.y <= this._stage?.goalY || marble === this._winner
+    );
   }
 
   private _calcTimeScale(): number {

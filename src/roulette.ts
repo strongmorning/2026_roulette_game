@@ -175,10 +175,10 @@ export class Roulette extends EventTarget {
           this._winner = marble;
           this._winnerPosition = { x: marble.x, y: marble.y };
           this._isRunning = false;
+          this._isPaused = true;
           this._particleManager.shot(this._renderer.width, this._renderer.height);
           setTimeout(() => {
             this._recorder.stop();
-            this._isPaused = true;
           }, 1000);
         } else if (
           this._isRunning &&
@@ -193,10 +193,10 @@ export class Roulette extends EventTarget {
           this._winner = this._marbles[i + 1];
           this._winnerPosition = { x: this._marbles[i + 1].x, y: this._marbles[i + 1].y };
           this._isRunning = false;
+          this._isPaused = true;
           this._particleManager.shot(this._renderer.width, this._renderer.height);
           setTimeout(() => {
             this._recorder.stop();
-            this._isPaused = true;
           }, 1000);
         }
         setTimeout(() => {

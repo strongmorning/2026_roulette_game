@@ -97,23 +97,27 @@
   async function applyStoredImages() {
     const bgData = localStorage.getItem('mbr_bgImage');
     if (bgData) {
-      const img = await loadImageFromBase64(bgData);
-      window.roulette.setBackgroundImage(img);
-      const preview = document.querySelector('#bgImagePreview');
-      preview.src = bgData;
-      preview.style.display = 'block';
+      try {
+        const img = await loadImageFromBase64(bgData);
+        window.roulette.setBackgroundImage(img);
+        const preview = document.querySelector('#bgImagePreview');
+        preview.src = bgData;
+        preview.style.display = 'block';
+      } catch (e) {}
     }
 
     const winnerImageData = localStorage.getItem('mbr_winnerImage');
     if (winnerImageData) {
-      const img = await loadImageFromBase64(winnerImageData);
-      window.roulette.setWinningImage(img);
-      const preview = document.querySelector('#winnerImagePreview');
-      preview.src = winnerImageData;
-      preview.style.display = 'block';
+      try {
+        const img = await loadImageFromBase64(winnerImageData);
+        window.roulette.setWinningImage(img);
+        const preview = document.querySelector('#winnerImagePreview');
+        preview.src = winnerImageData;
+        preview.style.display = 'block';
+      } catch (e) {}
     } else {
       const preview = document.querySelector('#winnerImagePreview');
-      preview.style.display = 'none';
+      if (preview) preview.style.display = 'none';
     }
 
     window.roulette.clearCustomMarbleImages();
@@ -122,8 +126,10 @@
       if (key.startsWith('mbr_photo_')) {
         const name = decodeURIComponent(key.slice('mbr_photo_'.length));
         const data = localStorage.getItem(key);
-        const img = await loadImageFromBase64(data);
-        window.roulette.setCustomMarbleImage(name, img);
+        try {
+          const img = await loadImageFromBase64(data);
+          window.roulette.setCustomMarbleImage(name, img);
+        } catch (e) {}
       }
     }
     updatePhotoUploadUI();
@@ -176,8 +182,12 @@
   }
 
   function applyBgMargin() {
-    const x = parseInt(document.querySelector('#bgMarginX').value, 10) / 100;
-    const y = parseInt(document.querySelector('#bgMarginY').value, 10) / 100;
+    const xEl = document.querySelector('#bgMarginX');
+    const yEl = document.querySelector('#bgMarginY');
+    if (!xEl || !yEl) return;
+    if (!window.roulette || typeof window.roulette.setBackgroundImageMargin !== 'function') return;
+    const x = parseInt(xEl.value, 10) / 100;
+    const y = parseInt(yEl.value, 10) / 100;
     window.roulette.setBackgroundImageMargin(x, y);
   }
 
@@ -274,7 +284,9 @@
       const text = await file.text();
       const data = JSON.parse(text);
       for (const [key, value] of Object.entries(data)) {
-        if (key.startsWith('mbr_')) localStorage.setItem(key, value);
+        if (key.startsWith('mbr_')) {
+          try { localStorage.setItem(key, value); } catch (e) {}
+        }
       }
       const savedNames = localStorage.getItem('mbr_names');
       if (savedNames) {

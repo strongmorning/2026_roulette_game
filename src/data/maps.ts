@@ -2981,103 +2981,208 @@ export const stages: StageDef[] = [
   },
   {
     title: 'Battery Cell',
-    goalY: 108,
-    zoomY: 103,
+    goalY: 110,
+    zoomY: 105,
     entities: [
-      // === WALLS (battery casing) ===
-      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[7, -300], [7, 108]], color: '#b87333' } },
-      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[25, -300], [25, 108]], color: '#a8a9ad' } },
+      // === WALLS ===
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[7, -300], [7, 110]], color: '#b87333' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[25, -300], [25, 110]], color: '#a8a9ad' } },
 
-      // === CATHODE 양극 (y: 5~30) — 6 rotating paddles, alternating dir, varying speed ===
+      // === CATHODE 양극 (y: 5~30) — 6 paddles + Λ-chevrons between rows ===
       { position: { x: 11, y: 9 }, type: 'kinematic', shape: { type: 'box', width: 3.5, height: 0.15, rotation: 0, color: '#1e90ff', bloomColor: '#0055bb' }, props: { density: 1, angularVelocity: 3, restitution: 0.3 } },
       { position: { x: 21, y: 13 }, type: 'kinematic', shape: { type: 'box', width: 3.5, height: 0.15, rotation: 0, color: '#1e90ff', bloomColor: '#0055bb' }, props: { density: 1, angularVelocity: -3.5, restitution: 0.3 } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.6 }, shape: { type: 'polyline', rotation: 0, points: [[14, 13], [16, 11], [18, 13]], color: '#4060c0' } },
       { position: { x: 11, y: 17 }, type: 'kinematic', shape: { type: 'box', width: 4.5, height: 0.15, rotation: 0, color: '#1e90ff', bloomColor: '#0055bb' }, props: { density: 1, angularVelocity: 2.5, restitution: 0.3 } },
       { position: { x: 21, y: 21 }, type: 'kinematic', shape: { type: 'box', width: 4, height: 0.15, rotation: 0, color: '#1e90ff', bloomColor: '#0055bb' }, props: { density: 1, angularVelocity: -4, restitution: 0.3 } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.6 }, shape: { type: 'polyline', rotation: 0, points: [[9, 20], [11, 18], [13, 20]], color: '#4060c0' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.6 }, shape: { type: 'polyline', rotation: 0, points: [[19, 22], [21, 20], [23, 22]], color: '#4060c0' } },
       { position: { x: 11, y: 25 }, type: 'kinematic', shape: { type: 'box', width: 4.5, height: 0.15, rotation: 0, color: '#1e90ff', bloomColor: '#0055bb' }, props: { density: 1, angularVelocity: 3, restitution: 0.3 } },
       { position: { x: 21, y: 29 }, type: 'kinematic', shape: { type: 'box', width: 3.5, height: 0.15, rotation: 0, color: '#1e90ff', bloomColor: '#0055bb' }, props: { density: 1, angularVelocity: -2.5, restitution: 0.3 } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.6 }, shape: { type: 'polyline', rotation: 0, points: [[14, 29], [16, 27], [18, 29]], color: '#4060c0' } },
 
-      // === SEPARATOR 분리막 (y: 32~55) — Plinko-style bouncy pegs + kinematic spinners ===
-      // Row A (y=34): 5 pegs — like BubblePop, restitution 1.2 for chaotic deflection
+      // === SEPARATOR 분리막 (y: 32~54) — Plinko pegs ===
       { type: 'static', position: { x: 9, y: 34 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 12.5, y: 34 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 16, y: 34 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 19.5, y: 34 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 23, y: 34 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
-      // Row B (y=38): 4 pegs offset (true Plinko alternation)
       { type: 'static', position: { x: 10.75, y: 38 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 14.25, y: 38 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 17.75, y: 38 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 21.25, y: 38 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
-      // Kinematic spinner between rows A-B (prevents stuck on pegs)
       { position: { x: 16, y: 36 }, type: 'kinematic', shape: { type: 'box', width: 2.5, height: 0.1, rotation: 0, color: '#c8c8c8' }, props: { density: 1, angularVelocity: 7, restitution: 0.3 } },
-      // Row C (y=42): 5 pegs
       { type: 'static', position: { x: 9, y: 42 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 12.5, y: 42 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 16, y: 42 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 19.5, y: 42 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 23, y: 42 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
-      // Row D (y=46): 4 pegs offset
       { type: 'static', position: { x: 10.75, y: 46 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 14.25, y: 46 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 17.75, y: 46 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 21.25, y: 46 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
-      // Kinematic spinner between rows C-D
       { position: { x: 16, y: 44 }, type: 'kinematic', shape: { type: 'box', width: 2.5, height: 0.1, rotation: 0, color: '#c8c8c8' }, props: { density: 1, angularVelocity: -7, restitution: 0.3 } },
-      // Row E (y=50): 5 pegs
       { type: 'static', position: { x: 9, y: 50 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 12.5, y: 50 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 16, y: 50 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 19.5, y: 50 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 23, y: 50 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
-      // Row F (y=54): 4 pegs offset
       { type: 'static', position: { x: 10.75, y: 54 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 14.25, y: 54 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 17.75, y: 54 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
       { type: 'static', position: { x: 21.25, y: 54 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#e8e8e8' } },
 
-      // === Li⁺ ION PADDLES 리튬이온 (y: 57~70) — 7 fast spinners, orange with bloom ===
-      { position: { x: 9.5, y: 58 }, type: 'kinematic', shape: { type: 'box', width: 2, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff3300' }, props: { density: 1, angularVelocity: 13, restitution: 0.5 } },
-      { position: { x: 14, y: 58 }, type: 'kinematic', shape: { type: 'box', width: 2, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff3300' }, props: { density: 1, angularVelocity: -13, restitution: 0.5 } },
-      { position: { x: 18.5, y: 58 }, type: 'kinematic', shape: { type: 'box', width: 2, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff3300' }, props: { density: 1, angularVelocity: 13, restitution: 0.5 } },
-      { position: { x: 23, y: 58 }, type: 'kinematic', shape: { type: 'box', width: 2, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff3300' }, props: { density: 1, angularVelocity: -13, restitution: 0.5 } },
-      { position: { x: 11.5, y: 64 }, type: 'kinematic', shape: { type: 'box', width: 2.5, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff3300' }, props: { density: 1, angularVelocity: -11, restitution: 0.5 } },
-      { position: { x: 16.5, y: 64 }, type: 'kinematic', shape: { type: 'box', width: 2.2, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff3300' }, props: { density: 1, angularVelocity: 11, restitution: 0.5 } },
-      { position: { x: 21.5, y: 64 }, type: 'kinematic', shape: { type: 'box', width: 2, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff3300' }, props: { density: 1, angularVelocity: -11, restitution: 0.5 } },
+      // === BOTTLENECK 병목 (y: 55~66) — hourglass + spinning gate ===
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[7, 55], [13, 62]], color: '#aaaaaa' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[25, 55], [19, 62]], color: '#aaaaaa' } },
+      { position: { x: 16, y: 62 }, type: 'kinematic', shape: { type: 'box', width: 4.5, height: 0.15, rotation: 0, color: '#cccccc' }, props: { density: 1, angularVelocity: 9, restitution: 0.4 } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[13, 62], [7.5, 67]], color: '#aaaaaa' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[19, 62], [24.5, 67]], color: '#aaaaaa' } },
 
-      // === SEI LAYER SEI막 (y: 68~76) — bouncy irregular circles, restitution 1.3 ===
-      { type: 'static', position: { x: 8.5, y: 72 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.6, color: '#32cd32' } },
-      { type: 'static', position: { x: 10.8, y: 70.5 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.55, color: '#32cd32' } },
-      { type: 'static', position: { x: 13.2, y: 72.5 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.65, color: '#32cd32' } },
-      { type: 'static', position: { x: 15.5, y: 70 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.55, color: '#32cd32' } },
-      { type: 'static', position: { x: 17.8, y: 72 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.6, color: '#32cd32' } },
-      { type: 'static', position: { x: 20, y: 70.5 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.55, color: '#32cd32' } },
-      { type: 'static', position: { x: 22.3, y: 72.5 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.6, color: '#32cd32' } },
-      { type: 'static', position: { x: 24.3, y: 70 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#32cd32' } },
+      // === Li⁺ ION PADDLES 리튬이온 (y: 67~80) ===
+      { position: { x: 9.5, y: 69 }, type: 'kinematic', shape: { type: 'box', width: 2, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff3300' }, props: { density: 1, angularVelocity: 13, restitution: 0.5 } },
+      { position: { x: 14, y: 69 }, type: 'kinematic', shape: { type: 'box', width: 2, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff3300' }, props: { density: 1, angularVelocity: -13, restitution: 0.5 } },
+      { position: { x: 18.5, y: 69 }, type: 'kinematic', shape: { type: 'box', width: 2, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff3300' }, props: { density: 1, angularVelocity: 13, restitution: 0.5 } },
+      { position: { x: 23, y: 69 }, type: 'kinematic', shape: { type: 'box', width: 2, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff3300' }, props: { density: 1, angularVelocity: -13, restitution: 0.5 } },
+      { position: { x: 11.5, y: 75 }, type: 'kinematic', shape: { type: 'box', width: 2.5, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff3300' }, props: { density: 1, angularVelocity: -11, restitution: 0.5 } },
+      { position: { x: 16.5, y: 75 }, type: 'kinematic', shape: { type: 'box', width: 2.2, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff3300' }, props: { density: 1, angularVelocity: 11, restitution: 0.5 } },
+      { position: { x: 21.5, y: 75 }, type: 'kinematic', shape: { type: 'box', width: 2, height: 0.12, rotation: 0, color: '#ff6600', bloomColor: '#ff3300' }, props: { density: 1, angularVelocity: -11, restitution: 0.5 } },
 
-      // === Li PLATING 수상돌기 (y: 74~84) — V-dendrites + 3 kinematic paddles between ===
-      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.5 }, shape: { type: 'polyline', rotation: 0, points: [[8, 83], [9.5, 77], [11, 83]], color: '#c0c0c0' } },
-      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.5 }, shape: { type: 'polyline', rotation: 0, points: [[12.5, 84], [14, 78], [15.5, 83.5]], color: '#c0c0c0' } },
-      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.5 }, shape: { type: 'polyline', rotation: 0, points: [[17, 83], [18.5, 77], [20, 84]], color: '#c0c0c0' } },
-      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.5 }, shape: { type: 'polyline', rotation: 0, points: [[21.5, 83.5], [23, 77.5], [24.5, 83]], color: '#c0c0c0' } },
-      // Kinematic paddles between dendrites — prevent deadlock
-      { position: { x: 11.5, y: 80.5 }, type: 'kinematic', shape: { type: 'box', width: 1.8, height: 0.1, rotation: 0, color: '#a0a0a0' }, props: { density: 1, angularVelocity: 10, restitution: 0.4 } },
-      { position: { x: 16.5, y: 80.5 }, type: 'kinematic', shape: { type: 'box', width: 1.8, height: 0.1, rotation: 0, color: '#a0a0a0' }, props: { density: 1, angularVelocity: -10, restitution: 0.4 } },
-      { position: { x: 21, y: 80.5 }, type: 'kinematic', shape: { type: 'box', width: 1.8, height: 0.1, rotation: 0, color: '#a0a0a0' }, props: { density: 1, angularVelocity: 10, restitution: 0.4 } },
+      // === SEI막 (y: 80~86) ===
+      { type: 'static', position: { x: 8.5, y: 84 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.6, color: '#32cd32' } },
+      { type: 'static', position: { x: 10.8, y: 82.5 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.55, color: '#32cd32' } },
+      { type: 'static', position: { x: 13.2, y: 84.5 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.65, color: '#32cd32' } },
+      { type: 'static', position: { x: 15.5, y: 82 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.55, color: '#32cd32' } },
+      { type: 'static', position: { x: 17.8, y: 84 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.6, color: '#32cd32' } },
+      { type: 'static', position: { x: 20.1, y: 82.5 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.55, color: '#32cd32' } },
+      { type: 'static', position: { x: 22.4, y: 84.5 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.6, color: '#32cd32' } },
+      { type: 'static', position: { x: 24.3, y: 82 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.45, color: '#32cd32' } },
 
-      // === ANODE 음극 (y: 86~100) — steeply angled graphite ledges + kinematic paddles ===
-      // All ledges have steep slope (>25°) so marbles cannot rest — alternating left/right
-      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[7.5, 91], [14, 88]], color: '#404040' } },
-      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[24.5, 90], [18, 87.5]], color: '#505050' } },
-      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[7.5, 96], [15, 93.5]], color: '#404040' } },
-      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[24.5, 96], [17.5, 93.5]], color: '#505050' } },
-      // Kinematic paddles in anode — 3 levels, alternating rotation
-      { position: { x: 16, y: 89 }, type: 'kinematic', shape: { type: 'box', width: 3, height: 0.12, rotation: 0, color: '#606060' }, props: { density: 1, angularVelocity: 5, restitution: 0.3 } },
-      { position: { x: 16, y: 94.5 }, type: 'kinematic', shape: { type: 'box', width: 3.5, height: 0.12, rotation: 0, color: '#606060' }, props: { density: 1, angularVelocity: -5, restitution: 0.3 } },
-      { position: { x: 16, y: 99.5 }, type: 'kinematic', shape: { type: 'box', width: 4, height: 0.12, rotation: 0, color: '#606060' }, props: { density: 1, angularVelocity: 4, restitution: 0.3 } },
+      // === Li PLATING 수상돌기 (y: 86~93) + paddles ===
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.5 }, shape: { type: 'polyline', rotation: 0, points: [[8, 93], [9.5, 88], [11, 93]], color: '#c0c0c0' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.5 }, shape: { type: 'polyline', rotation: 0, points: [[13, 94], [14.5, 89], [16, 94]], color: '#c0c0c0' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.5 }, shape: { type: 'polyline', rotation: 0, points: [[18, 93], [19.5, 88], [21, 93]], color: '#c0c0c0' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.5 }, shape: { type: 'polyline', rotation: 0, points: [[22.5, 94], [23.5, 89], [24.5, 93]], color: '#c0c0c0' } },
+      { position: { x: 11.8, y: 91 }, type: 'kinematic', shape: { type: 'box', width: 1.8, height: 0.1, rotation: 0, color: '#a0a0a0' }, props: { density: 1, angularVelocity: 10, restitution: 0.4 } },
+      { position: { x: 17, y: 91 }, type: 'kinematic', shape: { type: 'box', width: 1.8, height: 0.1, rotation: 0, color: '#a0a0a0' }, props: { density: 1, angularVelocity: -10, restitution: 0.4 } },
 
-      // === BOTTOM FUNNEL (current collector exit, 5-unit wide opening) ===
-      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0 }, shape: { type: 'polyline', rotation: 0, points: [[7, 101], [13, 105.5], [13, 109]], color: '#b87333' } },
-      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0 }, shape: { type: 'polyline', rotation: 0, points: [[25, 101], [19, 105.5], [19, 109]], color: '#a8a9ad' } },
+      // === ANODE 음극 (y: 94~105) — double-funnel bottleneck ===
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[7, 95], [14, 99]], color: '#404040' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[25, 95], [18, 99]], color: '#505050' } },
+      { position: { x: 16, y: 99 }, type: 'kinematic', shape: { type: 'box', width: 3, height: 0.12, rotation: 0, color: '#606060' }, props: { density: 1, angularVelocity: 6, restitution: 0.3 } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[7, 101], [15, 105]], color: '#404040' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[25, 101], [17, 105]], color: '#505050' } },
+      { position: { x: 16, y: 105 }, type: 'kinematic', shape: { type: 'box', width: 2, height: 0.12, rotation: 0, color: '#606060' }, props: { density: 1, angularVelocity: -6, restitution: 0.3 } },
+
+      // === FUNNEL ===
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0 }, shape: { type: 'polyline', rotation: 0, points: [[7, 106], [13.5, 109], [13.5, 111]], color: '#b87333' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0 }, shape: { type: 'polyline', rotation: 0, points: [[25, 106], [18.5, 109], [18.5, 111]], color: '#a8a9ad' } },
+    ],
+  },
+  {
+    title: 'Pinball',
+    goalY: 93,
+    zoomY: 88,
+    entities: [
+      // WALLS
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.5 }, shape: { type: 'polyline', rotation: 0, points: [[7, -300], [7, 93]] } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.5 }, shape: { type: 'polyline', rotation: 0, points: [[25, -300], [25, 93]] } },
+
+      // BUMPER FIELD (y 8~44) — 15 bouncy bumpers restitution 1.5, scattered like pinball
+      { type: 'static', position: { x: 10, y: 11 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 0.8, color: '#ff1493', bloomColor: '#ff1493' } },
+      { type: 'static', position: { x: 14.5, y: 9 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 0.9, color: '#00ffff', bloomColor: '#00ffff' } },
+      { type: 'static', position: { x: 19, y: 12 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 0.8, color: '#ff1493', bloomColor: '#ff1493' } },
+      { type: 'static', position: { x: 23, y: 10 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 0.7, color: '#ffff00', bloomColor: '#ffff00' } },
+      { type: 'static', position: { x: 8.5, y: 20 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 1.0, color: '#00ffff', bloomColor: '#00ffff' } },
+      { type: 'static', position: { x: 13, y: 18 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 0.85, color: '#ffff00', bloomColor: '#ffff00' } },
+      { type: 'static', position: { x: 17.5, y: 21 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 1.0, color: '#ff1493', bloomColor: '#ff1493' } },
+      { type: 'static', position: { x: 22.5, y: 19 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 0.85, color: '#00ffff', bloomColor: '#00ffff' } },
+      { type: 'static', position: { x: 11, y: 30 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 0.9, color: '#ffff00', bloomColor: '#ffff00' } },
+      { type: 'static', position: { x: 16, y: 28 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 1.1, color: '#ff1493', bloomColor: '#ff1493' } },
+      { type: 'static', position: { x: 21.5, y: 30 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 0.9, color: '#00ffff', bloomColor: '#00ffff' } },
+      { type: 'static', position: { x: 8.5, y: 38 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 0.8, color: '#ff1493', bloomColor: '#ff1493' } },
+      { type: 'static', position: { x: 14, y: 37 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 1.0, color: '#ffff00', bloomColor: '#ffff00' } },
+      { type: 'static', position: { x: 20, y: 38 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 0.8, color: '#00ffff', bloomColor: '#00ffff' } },
+      { type: 'static', position: { x: 24, y: 36 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 0.7, color: '#ff1493', bloomColor: '#ff1493' } },
+      // Kinematic spinners in bumper zone for extra chaos
+      { position: { x: 11.5, y: 15 }, type: 'kinematic', shape: { type: 'box', width: 2.5, height: 0.12, rotation: 0, color: '#ffffff' }, props: { density: 1, angularVelocity: 5, restitution: 0.4 } },
+      { position: { x: 20.5, y: 24 }, type: 'kinematic', shape: { type: 'box', width: 2.5, height: 0.12, rotation: 0, color: '#ffffff' }, props: { density: 1, angularVelocity: -6, restitution: 0.4 } },
+      { position: { x: 13.5, y: 33 }, type: 'kinematic', shape: { type: 'box', width: 3, height: 0.12, rotation: 0, color: '#ffffff' }, props: { density: 1, angularVelocity: 4, restitution: 0.4 } },
+
+      // S-CURVE SLALOM (y 44~60) — alternating wall protrusions force left-right-left
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.4 }, shape: { type: 'polyline', rotation: 0, points: [[7, 44], [16, 48]], color: '#888888' } },
+      { position: { x: 21, y: 47 }, type: 'kinematic', shape: { type: 'box', width: 3.5, height: 0.12, rotation: 0, color: '#aaaaaa' }, props: { density: 1, angularVelocity: 7, restitution: 0.4 } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.4 }, shape: { type: 'polyline', rotation: 0, points: [[25, 52], [16, 56]], color: '#888888' } },
+      { position: { x: 11, y: 55 }, type: 'kinematic', shape: { type: 'box', width: 3.5, height: 0.12, rotation: 0, color: '#aaaaaa' }, props: { density: 1, angularVelocity: -7, restitution: 0.4 } },
+
+      // FLIPPER ZONE (y 60~82) — 4 large rotating flippers + 3 bumpers
+      { position: { x: 10.5, y: 63 }, type: 'kinematic', shape: { type: 'box', width: 4.5, height: 0.15, rotation: 0, color: '#ff6600', bloomColor: '#ff4400' }, props: { density: 1, angularVelocity: 4, restitution: 0.5 } },
+      { position: { x: 21.5, y: 67 }, type: 'kinematic', shape: { type: 'box', width: 4.5, height: 0.15, rotation: 0, color: '#ff6600', bloomColor: '#ff4400' }, props: { density: 1, angularVelocity: -5, restitution: 0.5 } },
+      { position: { x: 10.5, y: 74 }, type: 'kinematic', shape: { type: 'box', width: 4.5, height: 0.15, rotation: 0, color: '#ff6600', bloomColor: '#ff4400' }, props: { density: 1, angularVelocity: 5, restitution: 0.5 } },
+      { position: { x: 21.5, y: 78 }, type: 'kinematic', shape: { type: 'box', width: 4.5, height: 0.15, rotation: 0, color: '#ff6600', bloomColor: '#ff4400' }, props: { density: 1, angularVelocity: -4, restitution: 0.5 } },
+      { type: 'static', position: { x: 9, y: 70 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 0.8, color: '#ff1493', bloomColor: '#ff1493' } },
+      { type: 'static', position: { x: 16, y: 69 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 1.0, color: '#00ffff', bloomColor: '#00ffff' } },
+      { type: 'static', position: { x: 23, y: 70 }, props: { density: 1, angularVelocity: 0, restitution: 1.5, life: 1 }, shape: { type: 'circle', radius: 0.8, color: '#ff1493', bloomColor: '#ff1493' } },
+
+      // FUNNEL
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0 }, shape: { type: 'polyline', rotation: 0, points: [[7, 83], [13.5, 90], [13.5, 94]] } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0 }, shape: { type: 'polyline', rotation: 0, points: [[25, 83], [18.5, 90], [18.5, 94]] } },
+    ],
+  },
+  {
+    title: 'Tornado',
+    goalY: 103,
+    zoomY: 98,
+    entities: [
+      // WALLS
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[7, -300], [7, 103]], color: '#1a2a3a' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[25, -300], [25, 103]], color: '#1a2a3a' } },
+
+      // OUTER STORM BANDS (y 5~32) — two columns spinning same clockwise direction
+      { position: { x: 11, y: 8 }, type: 'kinematic', shape: { type: 'box', width: 4, height: 0.15, rotation: 0, color: '#00bcd4', bloomColor: '#006080' }, props: { density: 1, angularVelocity: 3.5, restitution: 0.3 } },
+      { position: { x: 21, y: 12 }, type: 'kinematic', shape: { type: 'box', width: 4, height: 0.15, rotation: 0, color: '#00bcd4', bloomColor: '#006080' }, props: { density: 1, angularVelocity: 3.5, restitution: 0.3 } },
+      { position: { x: 11, y: 18 }, type: 'kinematic', shape: { type: 'box', width: 4, height: 0.15, rotation: 0, color: '#00bcd4', bloomColor: '#006080' }, props: { density: 1, angularVelocity: 3.5, restitution: 0.3 } },
+      { position: { x: 21, y: 22 }, type: 'kinematic', shape: { type: 'box', width: 4, height: 0.15, rotation: 0, color: '#00bcd4', bloomColor: '#006080' }, props: { density: 1, angularVelocity: 3.5, restitution: 0.3 } },
+      { position: { x: 11, y: 28 }, type: 'kinematic', shape: { type: 'box', width: 4, height: 0.15, rotation: 0, color: '#00bcd4', bloomColor: '#006080' }, props: { density: 1, angularVelocity: 3.5, restitution: 0.3 } },
+      { position: { x: 21, y: 32 }, type: 'kinematic', shape: { type: 'box', width: 4, height: 0.15, rotation: 0, color: '#00bcd4', bloomColor: '#006080' }, props: { density: 1, angularVelocity: 3.5, restitution: 0.3 } },
+      // Rain drops (bouncy circles) scattered in outer bands
+      { type: 'static', position: { x: 16, y: 10 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.5, color: '#80deea' } },
+      { type: 'static', position: { x: 9, y: 15 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.5, color: '#80deea' } },
+      { type: 'static', position: { x: 16, y: 25 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.5, color: '#80deea' } },
+      { type: 'static', position: { x: 23, y: 17 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.5, color: '#80deea' } },
+
+      // COMPRESSION ZONE (y 33~57) — converging walls + 5 accelerating spinners
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[7, 33], [13, 57]], color: '#006080' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[25, 33], [19, 57]], color: '#006080' } },
+      { position: { x: 16, y: 38 }, type: 'kinematic', shape: { type: 'box', width: 5, height: 0.15, rotation: 0, color: '#00e5ff', bloomColor: '#00b8d4' }, props: { density: 1, angularVelocity: 5, restitution: 0.4 } },
+      { position: { x: 16, y: 43 }, type: 'kinematic', shape: { type: 'box', width: 4.5, height: 0.15, rotation: 0, color: '#00e5ff', bloomColor: '#00b8d4' }, props: { density: 1, angularVelocity: 6, restitution: 0.4 } },
+      { position: { x: 16, y: 48 }, type: 'kinematic', shape: { type: 'box', width: 4, height: 0.15, rotation: 0, color: '#00e5ff', bloomColor: '#00b8d4' }, props: { density: 1, angularVelocity: 7, restitution: 0.4 } },
+      { position: { x: 16, y: 53 }, type: 'kinematic', shape: { type: 'box', width: 3.5, height: 0.15, rotation: 0, color: '#00e5ff', bloomColor: '#00b8d4' }, props: { density: 1, angularVelocity: 8, restitution: 0.4 } },
+      // Extra bouncy circles in compression zone
+      { type: 'static', position: { x: 10, y: 40 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.5, color: '#80deea' } },
+      { type: 'static', position: { x: 22, y: 42 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.5, color: '#80deea' } },
+      { type: 'static', position: { x: 11, y: 50 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.5, color: '#80deea' } },
+      { type: 'static', position: { x: 21, y: 52 }, props: { density: 1, angularVelocity: 0, restitution: 1.2, life: 1 }, shape: { type: 'circle', radius: 0.5, color: '#80deea' } },
+
+      // EYE OF THE STORM (y 57~80) — narrow channel, extreme speed paddles, red/orange
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[13, 57], [7.5, 75]], color: '#880000' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'polyline', rotation: 0, points: [[19, 57], [24.5, 75]], color: '#880000' } },
+      { position: { x: 16, y: 60 }, type: 'kinematic', shape: { type: 'box', width: 3.5, height: 0.15, rotation: 0, color: '#ff5722', bloomColor: '#ff2200' }, props: { density: 1, angularVelocity: 11, restitution: 0.5 } },
+      { position: { x: 16, y: 65 }, type: 'kinematic', shape: { type: 'box', width: 3.5, height: 0.15, rotation: 0, color: '#ff5722', bloomColor: '#ff2200' }, props: { density: 1, angularVelocity: -12, restitution: 0.5 } },
+      { position: { x: 16, y: 70 }, type: 'kinematic', shape: { type: 'box', width: 3.5, height: 0.15, rotation: 0, color: '#ff5722', bloomColor: '#ff2200' }, props: { density: 1, angularVelocity: 13, restitution: 0.5 } },
+      { position: { x: 16, y: 75 }, type: 'kinematic', shape: { type: 'box', width: 3.5, height: 0.15, rotation: 0, color: '#ff5722', bloomColor: '#ff2200' }, props: { density: 1, angularVelocity: -11, restitution: 0.5 } },
+
+      // SCATTER ZONE (y 75~90) — walls open up, bouncy circles, 2 paddles
+      { type: 'static', position: { x: 9, y: 80 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.7, color: '#ff8a65' } },
+      { type: 'static', position: { x: 16, y: 82 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.9, color: '#ff8a65' } },
+      { type: 'static', position: { x: 23, y: 80 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.7, color: '#ff8a65' } },
+      { type: 'static', position: { x: 12, y: 87 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.7, color: '#ff8a65' } },
+      { type: 'static', position: { x: 20, y: 87 }, props: { density: 1, angularVelocity: 0, restitution: 1.3, life: 1 }, shape: { type: 'circle', radius: 0.7, color: '#ff8a65' } },
+      { position: { x: 10, y: 84 }, type: 'kinematic', shape: { type: 'box', width: 3, height: 0.12, rotation: 0, color: '#ff5722', bloomColor: '#ff2200' }, props: { density: 1, angularVelocity: 6, restitution: 0.4 } },
+      { position: { x: 22, y: 84 }, type: 'kinematic', shape: { type: 'box', width: 3, height: 0.12, rotation: 0, color: '#ff5722', bloomColor: '#ff2200' }, props: { density: 1, angularVelocity: -6, restitution: 0.4 } },
+
+      // FUNNEL
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0 }, shape: { type: 'polyline', rotation: 0, points: [[7, 91], [13.5, 100], [13.5, 104]], color: '#1a2a3a' } },
+      { type: 'static', position: { x: 0, y: 0 }, props: { density: 1, angularVelocity: 0, restitution: 0 }, shape: { type: 'polyline', rotation: 0, points: [[25, 91], [18.5, 100], [18.5, 104]], color: '#1a2a3a' } },
     ],
   },
 ];

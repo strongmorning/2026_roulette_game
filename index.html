@@ -113,6 +113,113 @@
         window.roulette.setCustomMarbleImage(name, img);
       }
     }
+    updatePhotoUploadUI();
+  }
+
+  function loadImageFromUrl(url) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = url;
+    });
+  }
+
+  function compressImage(img, maxW, maxH, quality) {
+    const canvas = document.createElement('canvas');
+    let w = img.naturalWidth, h = img.naturalHeight;
+    const ratio = Math.min(maxW / w, maxH / h, 1);
+    canvas.width = Math.round(w * ratio);
+    canvas.height = Math.round(h * ratio);
+    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL('image/jpeg', quality);
+  }
+
+  function compressCropSquare(img, size, quality) {
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    const side = Math.min(img.naturalWidth, img.naturalHeight);
+    const sx = (img.naturalWidth - side) / 2;
+    const sy = (img.naturalHeight - side) / 2;
+    ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
+    return canvas.toDataURL('image/jpeg', quality);
+  }
+
+  async function autoLoadFromDb() {
+    let manifest;
+    try {
+      const res = await fetch('/db/manifest.json');
+      if (!res.ok) return;
+      manifest = await res.json();
+    } catch (e) {
+      return;
+    }
+
+    if (manifest.background && !localStorage.getItem('mbr_bgImage')) {
+      try {
+        const img = await loadImageFromUrl('/db/' + encodeURIComponent(manifest.background));
+        const compressed = compressImage(img, 1920, 1080, 0.85);
+        localStorage.setItem('mbr_bgImage', compressed);
+        window.roulette.setBackgroundImage(await loadImageFromBase64(compressed));
+        const preview = document.querySelector('#bgImagePreview');
+        preview.src = compressed;
+        preview.style.display = 'block';
+      } catch (e) {}
+    }
+
+    for (const name of (manifest.participants || [])) {
+      const storageKey = 'mbr_photo_' + encodeURIComponent(name);
+      if (!localStorage.getItem(storageKey)) {
+        try {
+          const img = await loadImageFromUrl('/db/' + encodeURIComponent(name) + '.jpg');
+          const compressed = compressCropSquare(img, 200, 0.85);
+          localStorage.setItem(storageKey, compressed);
+          window.roulette.setCustomMarbleImage(name, await loadImageFromBase64(compressed));
+        } catch (e) {}
+      }
+    }
+
+    const nameInput = document.querySelector('#in_names');
+    if (!nameInput.value.trim() && manifest.participants && manifest.participants.length > 0) {
+      nameInput.value = manifest.participants.join(',');
+      getReady();
+    }
+  }
+
+  function exportSettings() {
+    const data = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('mbr_')) data[key] = localStorage.getItem(key);
+    }
+    data['mbr_names'] = document.querySelector('#in_names').value;
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'roulette-settings.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function importSettings(file) {
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+      for (const [key, value] of Object.entries(data)) {
+        if (key.startsWith('mbr_')) localStorage.setItem(key, value);
+      }
+      const savedNames = localStorage.getItem('mbr_names');
+      if (savedNames) {
+        document.querySelector('#in_names').value = savedNames;
+        getReady();
+      }
+      await applyStoredImages();
+    } catch (e) {
+      alert('설정 파일을 불러오는 데 실패했습니다.');
+    }
   }
 
   function getUniqueNames() {
@@ -371,7 +478,16 @@
       window.roulette.setBackgroundImage(null);
     });
 
+    document.querySelector('#btnExportSettings').addEventListener('click', exportSettings);
+
+    document.querySelector('#importSettingsInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (file) await importSettings(file);
+      e.target.value = '';
+    });
+
     applyStoredImages();
+    autoLoadFromDb();
 
     const maps = window.roulette.getMaps();
     const mapSelector = document.querySelector('#sltMap');
@@ -516,6 +632,12 @@
         <label class="custom-images-label">참가자 사진</label>
         <div id="photoUploadList" class="photo-upload-list"></div>
       </div>
+    </div>
+
+    <div class="settings-io-row">
+      <button id="btnExportSettings" class="btn-io">설정 내보내기</button>
+      <input type="file" id="importSettingsInput" accept=".json" style="display:none" />
+      <button class="btn-io" onclick="document.getElementById('importSettingsInput').click()">설정 불러오기</button>
     </div>
 
     <div class="actions">

@@ -568,6 +568,23 @@ div.toast {
   border-radius: 10px;
 }
 
+.settings-io-row {
+  display: flex;
+  gap: 6px;
+  margin: 6px 0 4px 0;
+}
+
+.btn-io {
+  color: #fefefe;
+  background: #446;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 10pt;
+  cursor: pointer;
+  flex: 1;
+}
+
 .custom-images-section {
   margin: 6px 0;
   border-top: 1px solid #888;

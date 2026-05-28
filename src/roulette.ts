@@ -52,6 +52,7 @@ export class Roulette extends EventTarget {
   private physics!: IPhysics;
 
   private _isReady: boolean = false;
+  private _isPaused: boolean = false;
   protected fastForwarder!: FastForwader;
   protected _theme: ColorTheme = Themes.dark;
 
@@ -84,6 +85,10 @@ export class Roulette extends EventTarget {
 
   public setBackgroundImage(img: HTMLImageElement | null): void {
     this._renderer.setBackgroundImage(img);
+  }
+
+  public setBackgroundImageMargin(x: number, y: number): void {
+    this._renderer.setBackgroundImageMargin(x, y);
   }
 
   public setCustomMarbleImage(name: string, img: HTMLImageElement): void {
@@ -121,12 +126,14 @@ export class Roulette extends EventTarget {
     const interval = (this._updateInterval / 1000) * this._timeScale;
 
     while (this._elapsed >= this._updateInterval) {
-      this.physics.step(interval);
-      this._updateMarbles(this._updateInterval);
+      if (!this._isPaused) {
+        this.physics.step(interval);
+        this._updateMarbles(this._updateInterval);
+        this._updateEffects(this._updateInterval);
+        this._uiObjects.forEach((obj) => obj.update(this._updateInterval));
+      }
       this._particleManager.update(this._updateInterval);
-      this._updateEffects(this._updateInterval);
       this._elapsed -= this._updateInterval;
-      this._uiObjects.forEach((obj) => obj.update(this._updateInterval));
     }
 
     if (this._marbles.length > 1) {
@@ -165,6 +172,7 @@ export class Roulette extends EventTarget {
           this._particleManager.shot(this._renderer.width, this._renderer.height);
           setTimeout(() => {
             this._recorder.stop();
+            this._isPaused = true;
           }, 1000);
         } else if (
           this._isRunning &&
@@ -181,6 +189,7 @@ export class Roulette extends EventTarget {
           this._particleManager.shot(this._renderer.width, this._renderer.height);
           setTimeout(() => {
             this._recorder.stop();
+            this._isPaused = true;
           }, 1000);
         }
         setTimeout(() => {
@@ -435,10 +444,15 @@ export class Roulette extends EventTarget {
   }
 
   public reset() {
+    this._isPaused = false;
     this.clearMarbles();
     this._clearMap();
     this._loadMap();
     this._goalDist = Infinity;
+  }
+
+  public setWinningImage(img: HTMLImageElement | null): void {
+    this._renderer.setWinningImage(img);
   }
 
   public getCount() {

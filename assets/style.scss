@@ -493,6 +493,27 @@ div.copyright a {
 
 }
 
+#btnNextGame {
+  display: none;
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  z-index: 1000;
+  padding: 14px 32px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  background: #1a6ecc;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+
+  &:active {
+    background: #155aa0;
+  }
+}
+
 div.toast {
   position: fixed;
   transform: translate(-50%, 0);
@@ -583,6 +604,10 @@ div.toast {
   font-size: 10pt;
   cursor: pointer;
   flex: 1;
+
+  &.btn-io-danger {
+    background: #833;
+  }
 }
 
 .custom-images-section {
@@ -611,6 +636,47 @@ div.toast {
   align-items: center;
   gap: 6px;
   flex-wrap: wrap;
+}
+
+.bg-margin-controls {
+  flex-basis: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.bg-margin-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  input[type=range] {
+    flex: 1;
+    height: 4px;
+    width: auto;
+    padding: 0;
+    appearance: auto;
+    accent-color: #00baff;
+    cursor: pointer;
+
+    &:before, &:after { display: none; }
+  }
+}
+
+.bg-margin-label {
+  color: #ccc;
+  font-size: 9pt;
+  min-width: 24px;
+  flex-shrink: 0;
+}
+
+.bg-margin-value {
+  color: #ccc;
+  font-size: 9pt;
+  min-width: 34px;
+  text-align: right;
+  flex-shrink: 0;
 }
 
 .bg-preview {

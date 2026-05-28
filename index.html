@@ -104,6 +104,18 @@
       preview.style.display = 'block';
     }
 
+    const winnerImageData = localStorage.getItem('mbr_winnerImage');
+    if (winnerImageData) {
+      const img = await loadImageFromBase64(winnerImageData);
+      window.roulette.setWinningImage(img);
+      const preview = document.querySelector('#winnerImagePreview');
+      preview.src = winnerImageData;
+      preview.style.display = 'block';
+    } else {
+      const preview = document.querySelector('#winnerImagePreview');
+      preview.style.display = 'none';
+    }
+
     window.roulette.clearCustomMarbleImages();
     const keys = Object.keys(localStorage);
     for (const key of keys) {
@@ -115,6 +127,58 @@
       }
     }
     updatePhotoUploadUI();
+  }
+
+  function applyAllSettings() {
+    const darkMode = localStorage.getItem('mbr_darkMode');
+    if (darkMode !== null) {
+      const isDark = darkMode !== 'false';
+      document.querySelector('#chkDarkMode').checked = isDark;
+      window.options.darkMode = isDark;
+      window.roulette.setTheme(isDark ? 'dark' : 'light');
+      document.documentElement.classList.toggle('light', !isDark);
+    }
+
+    const autoRec = localStorage.getItem('mbr_autoRecording');
+    if (autoRec !== null) {
+      const isAuto = autoRec !== 'false';
+      document.querySelector('#chkAutoRecording').checked = isAuto;
+      window.options.autoRecording = isAuto;
+      window.roulette.setAutoRecording(isAuto);
+    }
+
+    const useSkills = localStorage.getItem('mbr_useSkills');
+    if (useSkills !== null) {
+      const isSkills = useSkills !== 'false';
+      document.querySelector('#chkSkill').checked = isSkills;
+      window.options.useSkills = isSkills;
+    }
+
+    const savedWinnerType = localStorage.getItem('mbr_winnerType');
+    const savedWinnerRank = localStorage.getItem('mbr_winnerRank');
+    if (savedWinnerType) {
+      winnerType = savedWinnerType;
+      const rank = savedWinnerRank ? parseInt(savedWinnerRank, 10) : 1;
+      setWinnerRank(isNaN(rank) ? 1 : rank);
+    }
+
+    const bgMarginX = localStorage.getItem('mbr_bgMarginX');
+    const bgMarginY = localStorage.getItem('mbr_bgMarginY');
+    if (bgMarginX !== null) {
+      document.querySelector('#bgMarginX').value = bgMarginX;
+      document.querySelector('#bgMarginXValue').textContent = bgMarginX + '%';
+    }
+    if (bgMarginY !== null) {
+      document.querySelector('#bgMarginY').value = bgMarginY;
+      document.querySelector('#bgMarginYValue').textContent = bgMarginY + '%';
+    }
+    applyBgMargin();
+  }
+
+  function applyBgMargin() {
+    const x = parseInt(document.querySelector('#bgMarginX').value, 10) / 100;
+    const y = parseInt(document.querySelector('#bgMarginY').value, 10) / 100;
+    window.roulette.setBackgroundImageMargin(x, y);
   }
 
   function loadImageFromUrl(url) {
@@ -218,6 +282,7 @@
         getReady();
       }
       await applyStoredImages();
+      applyAllSettings();
     } catch (e) {
       alert('설정 파일을 불러오는 데 실패했습니다.');
     }
@@ -306,6 +371,8 @@
     document.querySelector('#in_winningRank').value = rank;
     window.options.winningRank = rank - 1;
     window.roulette.setWinningRank(window.options.winningRank);
+    localStorage.setItem('mbr_winnerRank', rank);
+    localStorage.setItem('mbr_winnerType', winnerType);
 
     if (winnerType === 'first') {
       document.querySelector('.btn-first-winner').classList.toggle('active', true);
@@ -414,17 +481,20 @@
     document.querySelector('#chkAutoRecording').addEventListener('change', (e) => {
       window.options.autoRecording = e.target.matches(':checked');
       window.roulette.setAutoRecording(window.options.autoRecording);
+      localStorage.setItem('mbr_autoRecording', window.options.autoRecording);
     });
 
     document.querySelector('#chkSkill').addEventListener('change', (e) => {
       window.options.useSkills = e.target.matches(':checked');
       window.roulette.setWinningRank(window.options.winningRank);
+      localStorage.setItem('mbr_useSkills', window.options.useSkills);
     });
 
     document.querySelector('#chkDarkMode').addEventListener('change', (e) => {
       window.options.darkMode = e.target.matches(':checked');
       window.roulette.setTheme(window.options.darkMode ? 'dark' : 'light');
       document.documentElement.classList.toggle('light', !window.options.darkMode);
+      localStorage.setItem('mbr_darkMode', window.options.darkMode);
     });
 
     document.querySelector('#in_winningRank').addEventListener('change', (e) => {
@@ -446,9 +516,13 @@
     window.roulette.addEventListener('goal', () => {
       ready = false;
       setTimeout(() => {
-        document.querySelector('#settings').classList.remove('hide');
-        document.querySelector('#donate').classList.remove('hide');
-      }, 3000);
+        document.querySelector('#btnNextGame').style.display = 'block';
+      }, 1200);
+    });
+
+    document.querySelector('#btnNextGame').addEventListener('click', () => {
+      document.querySelector('#btnNextGame').style.display = 'none';
+      document.querySelector('#settings').classList.remove('hide');
     });
 
     window.roulette.addEventListener('message', (e) => {
@@ -495,6 +569,90 @@
       window.roulette.setBackgroundImage(null);
     });
 
+    document.querySelector('#bgMarginX').addEventListener('input', (e) => {
+      const v = e.target.value;
+      document.querySelector('#bgMarginXValue').textContent = v + '%';
+      localStorage.setItem('mbr_bgMarginX', v);
+      applyBgMargin();
+    });
+
+    document.querySelector('#bgMarginY').addEventListener('input', (e) => {
+      const v = e.target.value;
+      document.querySelector('#bgMarginYValue').textContent = v + '%';
+      localStorage.setItem('mbr_bgMarginY', v);
+      applyBgMargin();
+    });
+
+    document.querySelector('#winnerImageInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async (ev) => {
+        let rawImg;
+        try { rawImg = await loadImageFromBase64(ev.target.result); } catch (e) { return; }
+        window.roulette.setWinningImage(rawImg);
+        try {
+          const compressed = compressImage(rawImg, 3840, 2160, 0.95);
+          try { localStorage.setItem('mbr_winnerImage', compressed); } catch (e) {}
+          document.querySelector('#winnerImagePreview').src = compressed;
+        } catch (e) {
+          document.querySelector('#winnerImagePreview').src = ev.target.result;
+        }
+        document.querySelector('#winnerImagePreview').style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.querySelector('#btnClearWinnerImage').addEventListener('click', () => {
+      localStorage.removeItem('mbr_winnerImage');
+      document.querySelector('#winnerImagePreview').style.display = 'none';
+      document.querySelector('#winnerImageInput').value = '';
+      window.roulette.setWinningImage(null);
+    });
+
+    document.querySelector('#btnResetAll').addEventListener('click', () => {
+      if (!confirm('모든 설정과 이미지를 초기화하시겠습니까?')) return;
+
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('mbr_')) keysToRemove.push(key);
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
+
+      document.querySelector('#in_names').value = '';
+      document.querySelector('#bgImagePreview').style.display = 'none';
+      document.querySelector('#bgImageInput').value = '';
+      document.querySelector('#winnerImagePreview').style.display = 'none';
+      document.querySelector('#winnerImageInput').value = '';
+
+      document.querySelector('#chkAutoRecording').checked = false;
+      document.querySelector('#chkSkill').checked = true;
+      document.querySelector('#chkDarkMode').checked = true;
+      document.documentElement.classList.remove('light');
+
+      window.options.darkMode = true;
+      window.options.autoRecording = false;
+      window.options.useSkills = true;
+
+      window.roulette.setBackgroundImage(null);
+      window.roulette.clearCustomMarbleImages();
+      window.roulette.setWinningImage(null);
+      window.roulette.setTheme('dark');
+      window.roulette.setAutoRecording(false);
+
+      winnerType = 'first';
+      setWinnerRank(1);
+
+      document.querySelector('#bgMarginX').value = '0';
+      document.querySelector('#bgMarginXValue').textContent = '0%';
+      document.querySelector('#bgMarginY').value = '0';
+      document.querySelector('#bgMarginYValue').textContent = '0%';
+      window.roulette.setBackgroundImageMargin(0, 0);
+
+      updatePhotoUploadUI();
+    });
+
     document.querySelector('#btnExportSettings').addEventListener('click', exportSettings);
 
     document.querySelector('#importSettingsInput').addEventListener('change', async (e) => {
@@ -504,6 +662,7 @@
     });
 
     applyStoredImages();
+    applyAllSettings();
     autoLoadFromDb();
 
     const maps = window.roulette.getMaps();
@@ -643,6 +802,27 @@
           <button class="btn-photo-upload" onclick="document.getElementById('bgImageInput').click()">이미지 선택</button>
           <button id="btnClearBg" class="btn-photo-clear">삭제</button>
           <img id="bgImagePreview" class="bg-preview" style="display:none" />
+          <div class="bg-margin-controls">
+            <div class="bg-margin-item">
+              <span class="bg-margin-label">좌우</span>
+              <input type="range" id="bgMarginX" min="-30" max="40" step="1" value="0" />
+              <span id="bgMarginXValue" class="bg-margin-value">0%</span>
+            </div>
+            <div class="bg-margin-item">
+              <span class="bg-margin-label">상하</span>
+              <input type="range" id="bgMarginY" min="-30" max="40" step="1" value="0" />
+              <span id="bgMarginYValue" class="bg-margin-value">0%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="custom-images-row">
+        <label class="custom-images-label">당첨 이미지</label>
+        <div class="bg-image-controls">
+          <input type="file" id="winnerImageInput" accept="image/*" style="display:none" />
+          <button class="btn-photo-upload" onclick="document.getElementById('winnerImageInput').click()">이미지 선택</button>
+          <button id="btnClearWinnerImage" class="btn-photo-clear">삭제</button>
+          <img id="winnerImagePreview" class="bg-preview" style="display:none" />
         </div>
       </div>
       <div class="custom-images-row">
@@ -655,6 +835,7 @@
       <button id="btnExportSettings" class="btn-io">설정 내보내기</button>
       <input type="file" id="importSettingsInput" accept=".json" style="display:none" />
       <button class="btn-io" onclick="document.getElementById('importSettingsInput').click()">설정 불러오기</button>
+      <button id="btnResetAll" class="btn-io btn-io-danger">전체 초기화</button>
     </div>
 
     <div class="actions">
@@ -692,6 +873,7 @@
     <button id="closeNotice" data-trans>Close</button>
   </div>
 </div>
+<button id="btnNextGame">다음 게임</button>
 <div class="copyright">&copy; 2022-2026.<a href="https://lazygyu.net" target="_blank">lazygyu</a> <span data-trans>This program is freeware and may be used freely anywhere, including in broadcasts and videos.</span>
 </div>
 </body>
